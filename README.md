@@ -1,7 +1,7 @@
 Ckoirama Pipeline
 =================
 
-> Status: In development, not release yet
+> Status: In development, not released yet
 
 Dev installation
 ----------------
