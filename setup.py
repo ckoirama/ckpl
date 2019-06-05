@@ -15,7 +15,7 @@ setup(
         'console_scripts': ['ckpl = ckpl:main']
     },
     install_requires=[
-        'numpy', 'matplotlib', 'astropy', 'scipy'
+        'numpy', 'matplotlib', 'astropy', 'scipy', 'pandas'
     ],
     package_data={'ckpl': ['ckpl/data/*']},
     author='Ckoirama team',
