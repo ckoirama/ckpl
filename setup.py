@@ -12,10 +12,14 @@ setup(
     version='0.1',
     packages=['ckpl'],
     entry_points={
-        'console_scripts': ['ckpl = ckpl:main']
+        '''
+        [console_scripts]
+        ckpl=ckpl.__init__:main
+        ckpl-reduction = ckpl.2_reduction:cli
+        '''
     },
     install_requires=[
-        'numpy', 'matplotlib', 'astropy', 'scipy'
+        'numpy', 'matplotlib', 'astropy', 'scipy', 'pandas', 'click'
     ],
     package_data={'ckpl': ['ckpl/data/*']},
     author='Ckoirama team',
