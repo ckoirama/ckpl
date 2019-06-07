@@ -17,7 +17,8 @@ def lst(im_dir):
 
     #List for objects, to convert later to a data frame
     
-    cols = ['File Name', 'IMAGETYP', 'FILTER', 'OBJECT', 'EXPTIME', 'DATE-OBS']
+    cols = ['File Name', 'IMAGETYP', 'FILTER', 'OBJECT', 'EXPTIME', 'DATE-OBS'\
+            ,'OBJCTRA', 'OBJCTDEC']
     os.chdir(im_dir)
     files_list = os.listdir()
     objs = []
@@ -35,22 +36,20 @@ def lst(im_dir):
             filt = header['FILTER']
         else:
             filt = 'N.A'
+            
+        if 'OBJCTRA' in header:
+            RA = header['OBJCTRA']
+        else:
+            RA = 'N.A'
 
-        objs.append([file,im_type,filt,obj,str(exp_t),date])
+        if 'OBJCTDEC' in header:
+            DEC = header['OBJCTDEC']
+        else:
+            DEC = 'N.A'
+
+        objs.append([file,im_type,filt,obj,str(exp_t),date,RA,DEC])
         hdu.close(file)
 
     df = pd.DataFrame(objs, columns = cols)
 
     return(df)
-
-def lst_gui():
-    # Dialog window to look for the directory path through GUI
-    root = Tk()
-    root.withdraw() #use to hide tkinter window
-
-    cwd = os.getcwd()
-    im_dir = filedialog.askdirectory(\
-                                       parent=root, initialdir=cwd,\
-                                       title='Please select images\' directory')
-    
-    return(lst(im_dir))
