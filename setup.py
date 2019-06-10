@@ -19,7 +19,7 @@ setup(
         '''
     },
     install_requires=[
-        'numpy', 'matplotlib', 'astropy', 'scipy', 'pandas', 'click'
+        'numpy', 'matplotlib', 'astropy', 'scipy', 'pandas', 'click', 'reproject'
     ],
     package_data={'ckpl': ['ckpl/data/*']},
     author='Ckoirama team',
