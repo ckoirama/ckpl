@@ -12,19 +12,18 @@ setup(
     version='0.1',
     packages=['ckpl'],
     entry_points={
-        '''
-        [console_scripts]
-        ckpl=ckpl.__init__:main
-        ckpl-reduction = ckpl.2_reduction:cli
-        '''
+        'console_scripts': [
+            'ckpl=ckpl.__init__:main',
+            'ckpl-ls=ckpl.preprocessing:cli',
+            'ckpl-red = ckpl.reduction:cli'
+        ]
     },
     install_requires=[
-        'numpy', 'matplotlib', 'astropy', 'scipy', 'pandas', 'click', 'reproject'
+        'numpy', 'matplotlib', 'astropy', 'scipy', 'click', 'reproject'
     ],
     package_data={'ckpl': ['ckpl/data/*']},
     author='Ckoirama team',
     author_email='rodrigo.gonzalez@uamail.cl',
     description='Ckoirama Pipeline',
-    license='MIT',
-    keywords='astronomy instrumentation, observatory, pipeline'
+    license='MIT'
 )
