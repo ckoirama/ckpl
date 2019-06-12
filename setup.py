@@ -13,9 +13,10 @@ setup(
     packages=['ckpl'],
     entry_points={
         'console_scripts': [
-            'ckpl=ckpl.__init__:main',
-            'ckpl-ls=ckpl.preprocessing:cli',
-            'ckpl-red = ckpl.reduction:cli'
+            'ckpl = ckpl.__init__:main',
+            'ckpl-ls = ckpl.preprocessing:cli',
+            'ckpl-red = ckpl.reduction:cli',
+            'ckpl-ast = ckpl.astrometry:cli',
         ]
     },
     install_requires=[
