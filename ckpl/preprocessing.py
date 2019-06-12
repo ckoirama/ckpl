@@ -58,4 +58,4 @@ def ls(dir):
 
 def check_saturation(hdu):
     """TODO"""
-    return True
+    return False
