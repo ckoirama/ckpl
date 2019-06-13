@@ -143,7 +143,7 @@ def reducing_sci_by_band(table, outdir, masterbias, masterdark, masterflats):
             data /= masterflats[band]
 
         image = fits.PrimaryHDU(data)
-        image.header = hdu[0].header
+        #image.header = hdu[0].header
 
         filename = ntpath.basename(row['filename'])
         filename = path.join(outdir, 'sci_' + filename)
