@@ -11,6 +11,10 @@ Dev installation
 git clone https://github.com/ckoirama/ckpl.git
 cd ckpl
 pip install -e .
+
+sudo apt-get install astrometry.net
+sudo apt-get install astrometry-data-2mass-07
+
 ```
 
 Usage
