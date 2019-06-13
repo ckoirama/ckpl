@@ -37,18 +37,29 @@ def cli(imdir, outdir, blind):
     do_astrometry(table_reduced, blind, ast_path)
 
 
-def do_astrometry(table_sci, blind, ast_path):
+def do_astrometry(table_sci, blind, ast_path, rdls=False):
     """
     This function run astrometry.net software to perform blind astrometry.
     :param file:
     :param blind:
     :return:
     """
+
+    # options = {
+    #     'tweak-order': 3,
+    #     'downsample': 2
+    # }
+    #
+    # if rdls is False:
+    #     options['rdls'] = 'none'
+    #
+    # options_str = [f'--{key} {val}' for key, val in options].join(' ')
+
     options = "--tweak-order 3 --downsample 2 --overwrite --no-plots --cpulimit 30 "
     dir = f"--dir {ast_path} "
     print(dir)
     #outfiles = "--axy none --corr none --solved none --match none --rdls none --index-xyls none --wcs none "
-    outfiles = "--axy none --corr none --match none --rdls none --index-xyls none --solved none "
+    outfiles = "--axy none --corr none --match none --rdls none --index-xyls none "
     # outfiles += "--new-fits none"
     coords = ""
     scale = "--scale-units arcsecperpix --scale-low 0.46 --scale-high 0.47 "
