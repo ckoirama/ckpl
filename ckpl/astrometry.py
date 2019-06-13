@@ -59,7 +59,7 @@ def do_astrometry(table_sci, blind, ast_path, rdls=False):
     dir = f"--dir {ast_path} "
     print(dir)
     #outfiles = "--axy none --corr none --solved none --match none --rdls none --index-xyls none --wcs none "
-    outfiles = "--axy none --corr none --match none --rdls none --index-xyls none --wcs none "
+    outfiles = "--axy none --corr none --solved none --match none --rdls none --index-xyls none "
     # outfiles += "--new-fits none"
     coords = ""
     scale = "--scale-units arcsecperpix --scale-low 0.46 --scale-high 0.47 "
