@@ -27,7 +27,7 @@ is support missing calibrations
 Usage
 -----
 
-![](doc/example2.gif)
+![](doc/example3.gif)
 
 Ckoirama Observatory have one telescope called 
 [Chakana](http://www.astro.uantof.cl/research/observatorios/ckoirama-observatory/). The out coming files are 
