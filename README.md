@@ -27,6 +27,8 @@ is support missing calibrations
 Usage
 -----
 
+![](doc/example.gif)
+
 Ckoirama Observatory have one telescope called 
 [Chakana](http://www.astro.uantof.cl/research/observatorios/ckoirama-observatory/). The out coming files are 
 stored in the *Pelota PC*, usually in a directory that follow this pattern: `YYYY-MM-DD`.
