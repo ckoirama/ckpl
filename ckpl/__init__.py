@@ -28,7 +28,7 @@ def main(imdir, outdir, blind):
     click.echo("Exploring the files...")
     table_raw = preprocessing.ls(imdir)
     click.echo("Making the reduction...")
-    table_reduced = reduction.reduce(table_raw, outdir).table_reduced
+    table_reduced = reduction.reduce(table_raw, reduced_path).table_reduced
     click.echo("Astrometrizing...")
     astrometry.astrometrize(table_reduced, blind, ast_path)
     ascii.write(table_reduced, 'reduced.dat', format='ecsv', overwrite=True)
