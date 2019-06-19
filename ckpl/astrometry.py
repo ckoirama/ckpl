@@ -1,43 +1,33 @@
 import subprocess
-from . import reduction
 import click
-import numpy as np
 from os import path
 import pathlib
-from . import preprocessing
-from astropy.io import fits
-import os
-
+from astropy.table import Table
+from astropy.io import ascii
 
 
 @click.command()
-@click.option('--imdir', prompt='Directory for processed data')
-@click.option('--outdir', prompt='Directory for processed data')
-@click.option('--blind', default=False, is_flag=True, help='Blind Astrometry?')
-def cli(imdir, outdir, blind):
+@click.option(
+    '-r',
+    '--reducedtable',
+    default='./reduced.dat',
+    type=click.Path(exists=True, file_okay=True, readable=True, resolve_path=True))
+@click.argument(
+    'outdir',
+    default='./out',
+    type=click.Path(exists=False, dir_okay=True, writable=True, resolve_path=True))
+@click.option('--blind', is_flag=True, help='Do blind Astrometry?')
+def cli(reducedtable, outdir, blind):
 
-    calib_path = path.join(outdir, 'calib')
-    reduced_path = path.join(outdir, 'reduced')
     ast_path = path.join(outdir, 'ast')
-
-    # https://stackoverflow.com/a/600612
-    pathlib.Path(calib_path).mkdir(parents=True, exist_ok=True)
-    pathlib.Path(reduced_path).mkdir(parents=True, exist_ok=True)
     pathlib.Path(ast_path).mkdir(parents=True, exist_ok=True)
 
-    table = preprocessing.ls(imdir)
-
-    masterbias, masterdark, masterflats, table_reduced = reduction.reduction(imdir, outdir, calib_path, reduced_path, table)
-
-    click.echo(table_reduced)
-
-    print(f"blind? {blind}")
-
-    # table_sci = table[table['imagetype' == 'light']]
-    do_astrometry(table_reduced, blind, ast_path)
+    reduced_table = Table.read(reducedtable, format='ascii.ecsv')
+    reduced_table = astrometrize(reduced_table, blind, ast_path)
+    ascii.write(reduced_table, 'reduced.dat', format='ecsv', overwrite=True)
 
 
-def do_astrometry(table_sci, blind, ast_path, rdls=False):
+def astrometrize(reduced_table, blind, ast_path, rdls=False):
     """
     This function run astrometry.net software to perform blind astrometry.
     :param file:
@@ -45,42 +35,47 @@ def do_astrometry(table_sci, blind, ast_path, rdls=False):
     :return:
     """
 
-    # options = {
-    #     'tweak-order': 3,
-    #     'downsample': 2
-    # }
-    #
-    # if rdls is False:
-    #     options['rdls'] = 'none'
-    #
-    # options_str = [f'--{key} {val}' for key, val in options].join(' ')
+    options = {
+        'tweak-order': 3,
+        'downsample': 2,
+        'overwrite': '',
+        'no-plots': '',
+        'cpulimit': 30,
 
-    options = "--tweak-order 3 --downsample 2 --overwrite --no-plots --cpulimit 30 "
-    dir = f"--dir {ast_path} "
-    print(dir)
-    #outfiles = "--axy none --corr none --solved none --match none --rdls none --index-xyls none --wcs none "
-    outfiles = "--axy none --corr none --solved none --match none --rdls none --index-xyls none "
-    # outfiles += "--new-fits none"
-    coords = ""
-    scale = "--scale-units arcsecperpix --scale-low 0.46 --scale-high 0.47 "
+        'dir': ast_path,
+        'axy': 'none',
+        'corr': 'none',
+        'solved': 'none',
+        'match': 'none',
+        'rdls': 'none',
+        'index-xyls': 'none',
 
+        'scale-units': 'arcsecperpix',
+        'scale-low': 0.46,
+        'scale-high': 0.47
+    }
 
-    for i, row in enumerate(table_sci):
-        imname = row['filename']
+    if rdls is False:
+        options['rdls'] = 'none'
 
-        if not blind:
-            ra = str(row['ra']).replace(' ', ':')
-            dec = str(row['dec']).replace(' ', ':')
-            coords = f"--ra {ra} --dec {dec} --radius 0.5 "
-            print(f"coords: {coords}")
+    for i, row in enumerate(reduced_table):
+        filename = row['filename']
 
+        extra_options = {
+            'ra': str(row['ra']).replace(' ', ':'),
+            'dec': str(row['dec']).replace(' ', ':'),
+            'radius': 0.5
+        }
+        options_i = options if blind else {**options, **extra_options}
+
+        options_str = ' '.join([f'--{key} {val}' for key, val in options_i.items()])
 
         try:
-            command = "solve-field " + options + outfiles + coords + scale + dir + imname
-            subprocess.call(command, shell=True)
-            #subprocess.call(command, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, shell=True)
-
-
+            cmd = f'solve-field {options_str} {filename}'
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+            row['flag_astr'] = True
         except Exception as err:
             print("Astrometry.net failed", err)
 
+    return reduced_table

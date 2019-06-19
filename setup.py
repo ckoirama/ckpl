@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='ckpl',
-    version='0.1',
+    version='0.2',
     packages=['ckpl'],
     entry_points={
         'console_scripts': [
@@ -17,6 +17,7 @@ setup(
             'ckpl-ls = ckpl.preprocessing:cli',
             'ckpl-red = ckpl.reduction:cli',
             'ckpl-ast = ckpl.astrometry:cli',
+            'ckpl-stack = ckpl.stacking:cli',
         ]
     },
     install_requires=[

@@ -34,23 +34,49 @@ stored in the *Pelota PC*, usually in a directory that follow this pattern: `YYY
 Using the default options, the usage is as simple as run the command: `ckpl <working_directory>`. In this case, is expected
 that all the calibration and science images are inside that directory.
 
-As result, a new folder `outdir` will be created inside that directory.
+As result, a new folder `out` will be created inside that directory.
 
 
 ## Usage step by step
 
 This pipeline can also be used by steps, that is:
 
-1. `ckpl-ls --indir <dir1> --outdir <dir2>`: This print in the terminal an astropy table with the data as is recognized by the program.
+1. `ckpl-ls`: This print in the terminal an astropy table with the data as is recognized by the program.
 Also save that table in the directory.
+```
+Usage: ckpl-ls [OPTIONS] [IMDIR]
 
-2. `ckpl-red --data <table1> --outdir <dir2>`: This read the table data and make the reduction of the files, correcting
+Options:
+  -o, --output PATH  The name of the file to save the table
+  -v, --verbose
+  --nosave
+  --help             Show this message and exit.
+```
+
+2. `ckpl-red`: This read the table data and make the reduction of the files, correcting
 the science images by bias, dark and flat filters if are presented. As a result, an Astropy table is created, with 
 the information of the reduced files.
+```
+Usage: ckpl-red [OPTIONS] [OUTDIR]
 
-3. `ckpl-ast --data <table2> --outdir <dir2> [--blind]`: This command read the table returned in the previous step and
+Options:
+  -v, --verbose
+  -r, --rawtable PATH
+  --help               Show this message and exit.
+```
+
+3. `ckpl-ast`: This command read the table returned in the previous step and
 perform the astrometry. A new files are created with the astrometrical parameters. Blind option means that the command 
 perform a blind astrometry. 
+```
+Usage: ckpl-ast [OPTIONS] [OUTDIR]
+
+Options:
+  -r, --reducedtable PATH
+  --blind                  Do blind Astrometry?
+  --help                   Show this message and exit.
+
+```
 
 How it works
 ------------
