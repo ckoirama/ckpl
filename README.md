@@ -87,7 +87,7 @@ How it works
 
 2. Reduction: The Master Bias, Dark, and Flats per filter are created. Light images are corrected by them.
 
-3. Astrometry: Using astrometry.net the light images are reduced astrometrically.
+3. Astrometry: Using astrometry.net the light images are astrometrically calibrated.
 
 4. Staking: From the reduced table file, the program stack the images that match the stack column.
 
