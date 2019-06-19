@@ -4,7 +4,9 @@ from os import path, rename, remove
 import pathlib
 from astropy.table import Table
 from astropy.io import ascii
-
+from astropy.wcs import WCS
+from astropy.coordinates import SkyCoord
+from astropy import units as u
 
 @click.command()
 @click.option(
@@ -62,8 +64,8 @@ def astrometrize(reduced_table, blind, rdls=False):
             filename = row['filename']
             base, ext = path.splitext(filename)
             extra_options = {
-                'ra': str(row['ra']).replace(' ', ':'),
-                'dec': str(row['dec']).replace(' ', ':'),
+                'ra': row['ra'].replace(' ', ':'),
+                'dec': row['dec'].replace(' ', ':'),
                 'radius': 0.5,
                 'dir': path.dirname(row['filename'])
             }
@@ -76,6 +78,16 @@ def astrometrize(reduced_table, blind, rdls=False):
                 subprocess.call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, shell=True)
                 row['flag_astr'] = True
                 rename(base + '.new', row['filename'])
+                w = WCS(base + '.wcs')
+                ra_field, dec_field = w.all_pix2world(2048, 2048, 0)
+
+                centerfield_pos = SkyCoord(ra_field, dec_field, unit='deg')
+                telescope_pos = SkyCoord(row['ra'], row['dec'], unit=(u.hourangle, u.deg))
+
+                ra_offset = telescope_pos.ra - centerfield_pos.ra
+                dec_offset = telescope_pos.dec - centerfield_pos.dec
+                row['ra_offset'] = ra_offset.arcsec
+                row['dec_offset'] = dec_offset.arcsec
                 remove(base + '.wcs')
             except Exception as err:
                 print("Astrometry.net failed", err)
