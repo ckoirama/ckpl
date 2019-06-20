@@ -34,3 +34,7 @@ def main(imdir, outdir, blind):
     ascii.write(table_reduced, 'reduced.dat', format='ecsv', overwrite=True)
 
     click.echo(str(table_reduced))
+
+if __name__ == '__main__':
+    main()
+

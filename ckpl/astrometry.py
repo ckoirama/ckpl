@@ -7,6 +7,9 @@ from astropy.io import ascii
 from astropy.wcs import WCS
 from astropy.coordinates import SkyCoord
 from astropy import units as u
+import warnings
+
+warnings.simplefilter('ignore')
 
 @click.command()
 @click.option(
