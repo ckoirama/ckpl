@@ -38,6 +38,8 @@ that all the calibration and science images are inside that directory.
 
 As result, a new folder `out` will be created inside that directory.
 
+You can download sample images in the following [link](https://drive.google.com/file/d/1Ke4t9SCI7Iy8PuXCqveed31H-bx4P-94/view?usp=sharing).
+
 
 ## Usage step by step
 
