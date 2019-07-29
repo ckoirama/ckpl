@@ -35,14 +35,16 @@ def cli(verbose, rawtable, outdir):
 
     masterbias, masterdark, masterflats, table_reduced = reduce(table, reduced_path)
 
-    fits.PrimaryHDU(masterbias).writeto(path.join(calib_path, 'masterbias.fits'), overwrite=True)
-    fits.PrimaryHDU(masterdark).writeto(path.join(calib_path, 'masterdark.fits'), overwrite=True)
-
-    [
-        fits.PrimaryHDU(masterflat).writeto(path.join(calib_path, f'masterflat_{band}.fits'), overwrite=True)
-        for band, masterflat
-        in masterflats.items()
-    ]
+    if masterbias:
+        fits.PrimaryHDU(masterbias).writeto(path.join(calib_path, 'masterbias.fits'), overwrite=True)
+    if masterdark:
+        fits.PrimaryHDU(masterdark).writeto(path.join(calib_path, 'masterdark.fits'), overwrite=True)
+    if masterflats:
+        [
+            fits.PrimaryHDU(masterflat).writeto(path.join(calib_path, f'masterflat_{band}.fits'), overwrite=True)
+            for band, masterflat
+            in masterflats.items()
+        ]
 
     ascii.write(table_reduced, 'reduced.dat', overwrite=True, format='ecsv')
 
@@ -105,6 +107,8 @@ def make_masterdark(masterbias, table_darks):
     :param table_darks: an astropy Table of darks files
     :return:
     """
+    if masterbias is None:
+        masterbias = 0
     with click.progressbar(length=len(table_darks), label='Making Masterdark') as bar:
         for i, row in enumerate(table_darks):
             with fits.open(row['filename']) as hdu:
@@ -119,23 +123,27 @@ def make_masterdark(masterbias, table_darks):
     return np.median(darks, axis=2)
 
 
-def make_master_flat(table, master_bias, masterdark):
+def make_master_flat(table, masterbias, masterdark):
     """
-
+    (Assuming the linearity of the darks over the time)
     :param table: an astropy table with the files
-    :param master_bias:
+    :param masterbias:
     :param masterdark:
     :return:
     """
+    if masterbias is None:
+        masterbias = 0
+    if masterdark is None:
+        masterdark = 1
     with click.progressbar(length=len(table) + 2, label=f'Making MasterFlat (one per filter)') as bar:
         for i, row in enumerate(table):
             with fits.open(row['filename']) as hdu:
                 data = np.float64(hdu[0].data)
                 masterdark_factor = masterdark * row['exptime']
                 if i == 0:
-                    flat = np.atleast_3d(data - master_bias - masterdark_factor)
+                    flat = np.atleast_3d(data - masterbias - masterdark_factor)
                 else:
-                    flat = np.concatenate((flat, np.atleast_3d(data - master_bias - masterdark_factor)), axis=2)
+                    flat = np.concatenate((flat, np.atleast_3d(data - masterbias - masterdark_factor)), axis=2)
                 bar.update(1)
         masterflat = np.mean(flat, axis=2)
         median = np.median(masterflat)
