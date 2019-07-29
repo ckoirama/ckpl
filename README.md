@@ -1,7 +1,7 @@
 Ckoirama Pipeline
 =================
 
-> Status: In development, not released yet
+> Status: First version released
 
 This pipeline was developed exclusively to process the files coming off the Ckoirama Observatory of the Universidad 
 de Antofagasta.
@@ -10,19 +10,19 @@ de Antofagasta.
 
 Installation
 ----------------
-1) Clone it
-2) Install as a local pip
-3) Install astrometry.net
-```
-git clone https://github.com/ckoirama/ckpl.git
-cd ckpl
-pip install -e .
 
+1) Install ckpl using pip
+
+```
+pip install ckpl
+```
+
+2) Install astrometry.net
+
+```
 sudo apt-get install astrometry.net
 sudo apt-get install astrometry-data-2mass-07
-
 ```
-is support missing calibrations
 
 Usage
 -----
@@ -89,7 +89,7 @@ How it works
 
 3. Astrometry: Using astrometry.net the light images are reduced astrometrically.
 
-4. Staking: From the reduced table file, the program stack the images that match the stack column.
+4. (In development) Staking: From the reduced table file, the program stack the images that match the stack column.
 
 
 FAQ
