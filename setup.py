@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='ckpl',
-    version='0.3',
+    version='0.3.1',
     packages=['ckpl'],
     entry_points={
         'console_scripts': [
@@ -27,5 +27,6 @@ setup(
     author='Ckoirama team',
     author_email='rodrigo.gonzalez@uamail.cl',
     description='Ckoirama Pipeline',
-    license='MIT'
+    license='MIT',
+    url='https://github.com/ckoirama/ckpl'
 )
