@@ -162,7 +162,8 @@ def reducing_sci_by_band(table, outdir, masterbias, masterdark, masterflats):
     """
 
     cols = ['filename', 'imagetype', 'band', 'object', 'exptime', 'date_obs',
-            'ra', 'dec', 'airmass', 'saturated', 'flag_bias', 'flag_dark', 'flag_flat', 'flag_astr', 'stack']
+            'ra', 'dec', 'ra_offset', 'dec_offset','airmass', 'saturated',
+            'flag_bias', 'flag_dark', 'flag_flat', 'flag_astr', 'stack']
     sci_list = []
     with click.progressbar(length=len(table[table['imagetype'] == 'light']), label='Reducing science images') as bar:
         for row in table[table['imagetype'] == 'light']:
@@ -195,6 +196,8 @@ def reducing_sci_by_band(table, outdir, masterbias, masterdark, masterflats):
                     row['date_obs'],
                     row['ra'],
                     row['dec'],
+                    None,
+                    None,
                     row['airmass'],
                     row['saturated'],
                     masterbias is not None,
