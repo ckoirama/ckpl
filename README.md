@@ -109,3 +109,6 @@ You can edit the file returned by  `ckpl-red` command, setting the column `stack
  You can use the --blind flag in the `ckpl-ast` command to perform a blind search of the field. Then you
  can pass the coordinates of the center of the field to the TCS.
  
+4. How can I try the pipeline?
+ You can try it using the sample data available here: https://drive.google.com/file/d/1Ke4t9SCI7Iy8PuXCqveed31H-bx4P-94/view?usp=sharing
+ 
