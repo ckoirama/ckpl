@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='ckpl',
-    version='0.3.1',
+    version='0.3.2',
     packages=['ckpl'],
     entry_points={
         'console_scripts': [

@@ -33,26 +33,12 @@ def cli(verbose, rawtable, outdir):
 
     table = Table.read(rawtable, format='ascii.ecsv')
 
-    masterbias, masterdark, masterflats, table_reduced = reduce(table, reduced_path)
-
-    if masterbias:
-        fits.PrimaryHDU(masterbias).writeto(path.join(calib_path, 'masterbias.fits'), overwrite=True)
-    if masterdark:
-        fits.PrimaryHDU(masterdark).writeto(path.join(calib_path, 'masterdark.fits'), overwrite=True)
-    if masterflats:
-        [
-            fits.PrimaryHDU(masterflat).writeto(path.join(calib_path, f'masterflat_{band}.fits'), overwrite=True)
-            for band, masterflat
-            in masterflats.items()
-        ]
-
-    ascii.write(table_reduced, 'reduced.dat', overwrite=True, format='ecsv')
-
+    reduced_data = reduce(table, reduced_path, calib_path)
     if verbose:
-        click.echo(table_reduced)
+        click.echo(reduced_data.table_reduced)
 
 
-def reduce(table, reduced_path):
+def reduce(table, reduced_path, calib_path=None):
     """
 
     :param table: an astropy Table instance that contains the files that must be reduced
@@ -78,6 +64,20 @@ def reduce(table, reduced_path):
     }
 
     table_reduced = reducing_sci_by_band(table, reduced_path, masterbias, masterdark, masterflats)
+
+    # Optionally save the calibration data
+    if calib_path is not None:
+        if masterbias is not None:
+            fits.PrimaryHDU(masterbias).writeto(path.join(calib_path, 'masterbias.fits'), overwrite=True)
+        if masterdark is not None:
+            fits.PrimaryHDU(masterdark).writeto(path.join(calib_path, 'masterdark.fits'), overwrite=True)
+        if masterflats is not None:
+            [
+                fits.PrimaryHDU(masterflat).writeto(path.join(calib_path, f'masterflat_{band}.fits'), overwrite=True)
+                for band, masterflat
+                in masterflats.items()
+            ]
+        ascii.write(table_reduced, 'reduced.dat', overwrite=True, format='ecsv')
 
     return Reducted(masterbias, masterdark, masterflats, table_reduced)
 
